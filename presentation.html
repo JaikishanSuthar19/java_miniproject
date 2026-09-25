@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Project 11 - College Course Registration System Presentation</title>
+    <style>
+        :root {
+            --dark-navy: #0F172A;
+            --deeper-navy: #020617;
+            --primary-blue: #2563EB;
+            --light-blue: #EFF6FF;
+            --accent-green: #16A34A;
+            --accent-red: #DC2626;
+            --bg-light: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border-color: #E2E8F0;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--deeper-navy);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Presentation Wrapper */
+        #deck-container {
+            width: 95vw;
+            max-width: 1400px;
+            height: 86vh;
+            background: var(--bg-light);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Progress Bar */
+        #progress-bar {
+            height: 5px;
+            background: var(--primary-blue);
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        /* Slide Container */
+        .slide {
+            flex: 1;
+            padding: 40px 60px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+        }
+
+        /* Theme Variations */
+        .slide.dark-theme {
+            background: radial-gradient(circle at top left, var(--dark-navy), var(--deeper-navy));
+            color: #FFFFFF;
+        }
+
+        /* Header Style */
+        .slide-header {
+            margin-bottom: 25px;
+        }
+
+        .slide-category {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary-blue);
+            margin-bottom: 6px;
+        }
+
+        .slide-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+        }
+
+        .dark-theme .slide-title {
+            color: #FFFFFF;
+        }
+
+        .slide-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .dark-theme .slide-subtitle {
+            color: #94A3B8;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            flex: 1;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            flex: 1;
+        }
+
+        /* Showcase Layout (Image Left, Points Right) */
+        .showcase-layout {
+            display: grid;
+            grid-template-columns: 1.65fr 1fr;
+            gap: 30px;
+            flex: 1;
+            align-items: center;
+        }
+
+        .screenshot-container {
+            background: #FFFFFF;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            max-height: 54vh;
+            border-radius: 8px;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .screenshot-container img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-theme .card {
+            background: rgba(15, 23, 42, 0.7);
+            border-color: rgba(51, 65, 85, 0.8);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--dark-navy);
+        }
+
+        .dark-theme .card-title {
+            color: #FFFFFF;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 14px;
+            font-size: 0.98rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .badge-blue { background: #EFF6FF; color: var(--primary-blue); }
+        .badge-green { background: #F0FDF4; color: var(--accent-green); }
+
+        /* Controls Footer */
+        #deck-footer {
+            height: 55px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .dark-theme-footer {
+            background: var(--dark-navy) !important;
+            border-color: rgba(51, 65, 85, 0.5) !important;
+        }
+
+        .nav-btn {
+            background: var(--primary-blue);
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #1D4ED8;
+        }
+
+        .slide-counter {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Title Slide Unique Styling */
+        .title-hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .meta-item-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #93C5FD;
+            margin-bottom: 4px;
+        }
+
+        .meta-item-val {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .team-pill {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.25);
+            border: 1px solid rgba(96, 165, 250, 0.5);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 6px;
+            margin-top: 4px;
+            font-size: 0.85rem;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="deck-container">
+        <div id="progress-bar"></div>
+
+        <!-- SLIDE 1: Title Slide -->
+        <div class="slide dark-theme active" id="slide-1">
+            <div class="title-hero">
+                <div style="font-size: 1rem; font-weight: 800; letter-spacing: 2px; color: #60A5FA; margin-bottom: 12px;">
+                    MINI PROJECT 11 • GROUP 11
+                </div>
+                <h1 style="font-size: 3.2rem; font-weight: 900; line-height: 1.15; margin-bottom: 15px;">
+                    College Course Registration<br>
+                    <span style="color: #60A5FA;">Management System</span>
+                </h1>
+                <p style="font-size: 1.25rem; color: #CBD5E1; max-width: 800px; margin-bottom: 25px;">
+                    A Modern SaaS-Inspired Desktop Application Built with Java Swing & Advanced Java Collections Framework
+                </p>
+
+                <div class="meta-grid">
+                    <div>
+                        <div class="meta-item-label">Subject</div>
+                        <div class="meta-item-val">Java Programming</div>
+                    </div>
+                    <div>
+                        <div class="meta-item-label">Cohort</div>
+                        <div class="meta-item-val">Jeff Bezos</div>
+                    </div>
+                    <div>
+                        <div class="meta-item-label">Batch</div>
+                        <div class="meta-item-val">2025 – 2029</div>
+                    </div>
+                    <div>
+                        <div class="meta-item-label">Project Code</div>
+                        <div class="meta-item-val">Mini Project #11</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <div class="meta-item-label" style="margin-bottom: 8px;">Development Team Members:</div>
+                    <span class="team-pill">👨‍💻 Jaikishan (Student & Auth Lead)</span>
+                    <span class="team-pill">👨‍💻 Omkar (Course & Safe CRUD Lead)</span>
+                    <span class="team-pill">👨‍💻 Sarthak (Registration & Credit Engine Lead)</span>
+                    <span class="team-pill">👨‍💻 Danish (Admin, Faculty & DataStore Lead)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Problem Statement & Motivation -->
+        <div class="slide" id="slide-2">
+            <div class="slide-header">
+                <div class="slide-category">Problem Definition</div>
+                <h2 class="slide-title">Problem Statement & Motivation</h2>
+                <div class="slide-subtitle">Addressing academic enrollment friction, seat contention, and institutional governance.</div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="badge badge-blue">The Core Problem</div>
+                    <div class="card-title">Challenges with Manual / Traditional Systems</div>
+                    <ul class="feature-list">
+                        <li><strong>Course Over-Enrollment:</strong> Lack of real-time seat locks leads to classrooms exceeding maximum physical capacity.</li>
+                        <li><strong>Duplicate Registrations:</strong> Students inadvertently registering for duplicate sections, consuming limited seats.</li>
+                        <li><strong>Disconnected Faculty Administration:</strong> Faculty allocations maintained separately from live student course catalogs.</li>
+                        <li><strong>Schedule Uncertainty:</strong> Absence of instant feedback regarding credit caps and registration status.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">The Solution</div>
+                    <div class="card-title">Our Digital Approach</div>
+                    <ul class="feature-list">
+                        <li><strong>Dual-Role Portals:</strong> Distinct tailored environments for Students and Administrators.</li>
+                        <li><strong>Real-Time Capacity Guards:</strong> Instant vacancy recalculation on enrollment and seat restoration upon cancellation.</li>
+                        <li><strong>Enterprise Validation Rules:</strong> Strict prevention of duplicates, full courses, and exceeding the 18-credit semester limit.</li>
+                        <li><strong>Synchronized State Architecture:</strong> Cross-panel auto-refresh ensuring consistent data views across all tabs.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Objectives & Syllabus Requirements -->
+        <div class="slide" id="slide-3">
+            <div class="slide-header">
+                <div class="slide-category">Academic Alignment</div>
+                <h2 class="slide-title">Problem Statement Objectives</h2>
+                <div class="slide-subtitle">Direct 1-to-1 fulfillment of all 8 syllabus objectives for Mini Project 11.</div>
+            </div>
+            <div class="grid-4">
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">👥</div>
+                    <div class="card-title" style="font-size: 1.1rem;">1. Entity Management</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Manage Students, Faculty, Courses, and Registrations with complete domain POJOs.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
+                    <div class="card-title" style="font-size: 1.1rem;">2. Registration Engine</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">End-to-end enrollment, duplicate prevention, and instantaneous one-click cancellation.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">🪑</div>
+                    <div class="card-title" style="font-size: 1.1rem;">3. Capacity Monitoring</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Enforce classroom capacity limits with live AVAILABLE and FULL status indicators.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">📦</div>
+                    <div class="card-title" style="font-size: 1.1rem;">4. Array Storage</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Fixed-size <code>Course[]</code> array for base course storage with dynamic resizing safety.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">🔗</div>
+                    <div class="card-title" style="font-size: 1.1rem;">5. LinkedList Log</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);"><code>LinkedList&lt;Registration&gt;</code> maintaining a chronological audit trail of all transactions.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">⚡</div>
+                    <div class="card-title" style="font-size: 1.1rem;">6. HashMap Lookups</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">$O(1)$ fast lookups for Students, Courses, and Faculty by unique ID strings.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">🌲</div>
+                    <div class="card-title" style="font-size: 1.1rem;">7. TreeMap Sorting</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Red-Black Tree ensuring courses remain naturally sorted in alphabetical order by ID.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">🖥️</div>
+                    <div class="card-title" style="font-size: 1.1rem;">8. Swing & FlatLaf GUI</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Modern 2026 SaaS-style desktop UI with responsive CardLayout and custom Renderers.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Data Structures & Complexity Matrix -->
+        <div class="slide" id="slide-4">
+            <div class="slide-header">
+                <div class="slide-category">Computer Science Foundations</div>
+                <h2 class="slide-title">Java Collections Framework Deep Dive</h2>
+                <div class="slide-subtitle">Algorithmic complexity comparison and design rationale for each collection type.</div>
+            </div>
+            <div class="grid-4">
+                <div class="card">
+                    <div class="badge badge-blue">Fixed Memory</div>
+                    <div class="card-title">Course[] (Array)</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">Time Complexity: O(1) Index Access</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+                        Fulfills Objective 4. Used in <code>DataStore</code> for predefined initial courses. Resized dynamically using <code>System.arraycopy</code> when capacity expands.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">Audit Trail</div>
+                    <div class="card-title">LinkedList&lt;Reg&gt;</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-green); margin-bottom: 10px;">Time Complexity: O(1) Appends</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+                        Fulfills Objective 5. Maintains sequential transaction records. Appends registrations in constant time without requiring contiguous memory reallocations.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="badge badge-blue">Fast Search</div>
+                    <div class="card-title">HashMap&lt;ID, T&gt;</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">Time Complexity: O(1) Average</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+                        Fulfills Objective 6. Stores Students, Courses, and Faculty indexed by unique ID strings. Powers immediate authentication and instant detail fetching.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">Self-Sorting</div>
+                    <div class="card-title">TreeMap&lt;ID, Course&gt;</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-green); margin-bottom: 10px;">Time Complexity: O(log N)</div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+                        Fulfills Objective 7. Backed by a Red-Black Tree. Guarantees courses are always presented in alphabetical order across tables and dropdowns without manual sorting.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Showcase - Split-Screen Login -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 1</div>
+                <h2 class="slide-title">Dual-Role Authentication Portal</h2>
+                <div class="slide-subtitle">Split-screen modern login routing to Student or Administrator portals.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/01_login_frame.png" alt="Login Frame Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-blue">Login Architecture</div>
+                    <div class="card-title">Key Capabilities</div>
+                    <ul class="feature-list">
+                        <li><strong>Dual-Role Routing:</strong> Entering <code>admin</code> opens the Admin Dashboard; student credentials load the personalized student shell.</li>
+                        <li><strong>Keyboard Accessibility:</strong> Pressing <kbd>Enter</kbd> submits the form immediately via <code>JRootPane.setDefaultButton()</code>.</li>
+                        <li><strong>Modern SaaS Aesthetic:</strong> High-contrast split-screen using FlatLaf styling with smooth rounded form fields.</li>
+                        <li><strong>Demo Credentials Display:</strong> Facilitates seamless grading and evaluation.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Showcase - Student Dashboard -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 2</div>
+                <h2 class="slide-title">Student Dashboard Overview</h2>
+                <div class="slide-subtitle">Personalized academic workspace with real-time summary indicators.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/02_student_dashboard.png" alt="Student Dashboard Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">Student Portal</div>
+                    <div class="card-title">Live Indicators</div>
+                    <ul class="feature-list">
+                        <li><strong>4 Metric Cards:</strong> Total Courses, Available Courses, Registered Courses, and Total Enrolled Credits.</li>
+                        <li><strong>Recent Registrations Feed:</strong> Audits the student's 3 most recent courses with credits and green status badges.</li>
+                        <li><strong>Dynamic Header:</strong> Displays student's name, department (CSE), semester, and capitalized avatar badge.</li>
+                        <li><strong>Active Tab Indicator:</strong> Sidebar nav button glows royal blue (<code>#2563EB</code>) on the active card.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Showcase - Available Courses -->
+        <div class="slide" id="slide-7">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 3</div>
+                <h2 class="slide-title">Course Catalog & Capacity Enforcement</h2>
+                <div class="slide-subtitle">Searchable table displaying live seat vacancy and capacity status pills.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/03_student_available_courses.png" alt="Available Courses Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-blue">Capacity Management</div>
+                    <div class="card-title">Catalog Features</div>
+                    <ul class="feature-list">
+                        <li><strong>Live Seat Calculation:</strong> <code>Available Seats = Capacity - Registered Students</code>.</li>
+                        <li><strong>Status Pill Renderer:</strong> Custom <code>TableCellRenderer</code> painting green <code>AVAILABLE</code> badges and red <code>FULL</code> badges (e.g. CS104 40/40 filled).</li>
+                        <li><strong>Multi-Field Filter:</strong> Instant search filtering across Course ID, Course Title, and Faculty Name.</li>
+                        <li><strong>TreeMap Natural Order:</strong> Courses displayed in alphabetical Course ID sequence.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Showcase - Registration & Credit Cap -->
+        <div class="slide" id="slide-8">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 4</div>
+                <h2 class="slide-title">Course Registration & Credit Cap Engine</h2>
+                <div class="slide-subtitle">Interactive course selection card enforcing semester credit limits and seat capacity.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/04_student_register_course.png" alt="Registration Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">Enrollment Rules</div>
+                    <div class="card-title">Enforced Constraints</div>
+                    <ul class="feature-list">
+                        <li><strong>Dynamic Course Detail Card:</strong> Selecting a course from <code>JComboBox</code> instantly populates faculty, credits, and vacancy.</li>
+                        <li><strong>Capacity Lock:</strong> The "Confirm Registration" button automatically disables if the course is full.</li>
+                        <li><strong>Duplicate Check:</strong> Prevents enrolling into the same course multiple times.</li>
+                        <li><strong>18-Credit Maximum Cap:</strong> Academic rule preventing student overload beyond 18 credits per semester.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Showcase - My Courses & Cancellation -->
+        <div class="slide" id="slide-9">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 5</div>
+                <h2 class="slide-title">My Courses & Interactive Seat Release</h2>
+                <div class="slide-subtitle">Schedule management table featuring one-click interactive cancellation buttons.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/05_student_my_courses.png" alt="My Courses Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-blue">Schedule Management</div>
+                    <div class="card-title">Table Button Editor</div>
+                    <ul class="feature-list">
+                        <li><strong>Credit Summary:</strong> Live counter calculating total enrolled credits.</li>
+                        <li><strong>Interactive Table Button:</strong> Custom <code>TableCellEditor</code> embedding clickable red "Cancel" buttons into rows.</li>
+                        <li><strong>Confirmation Dialog:</strong> Prompts the student before cancelling to prevent accidental deregistration.</li>
+                        <li><strong>Instant Seat Release:</strong> Decrements course enrollment count immediately, restoring the vacancy in the catalog.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Showcase - Admin Dashboard Overview -->
+        <div class="slide" id="slide-10">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 6</div>
+                <h2 class="slide-title">Admin Dashboard & System Overview</h2>
+                <div class="slide-subtitle">High-level institutional statistics and quick navigation actions.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/06_admin_dashboard.png" alt="Admin Dashboard Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">Administrative Control</div>
+                    <div class="card-title">System Metrics</div>
+                    <ul class="feature-list">
+                        <li><strong>5 Institutional Counters:</strong> Total Students (4), Total Courses (6), Total Faculty (6), Total Registrations (6), and Open Seats (64).</li>
+                        <li><strong>Seat Capacity Aggregation:</strong> Computes college-wide vacancy across all active courses in real time.</li>
+                        <li><strong>Quick Action Shortcuts:</strong> Direct one-click navigation to Manage Courses, View Students, Faculty, and Registrations.</li>
+                        <li><strong>Cross-Panel Sync:</strong> Automatically recalculates when changes occur in other panels.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Showcase - Admin Course CRUD -->
+        <div class="slide" id="slide-11">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 7</div>
+                <h2 class="slide-title">Course CRUD & Safe Deletion Guard</h2>
+                <div class="slide-subtitle">Administrative course catalog with modal creation, editing, and deletion guards.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/07_admin_manage_courses.png" alt="Admin Courses Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-blue">Data Governance</div>
+                    <div class="card-title">Enterprise Safeguards</div>
+                    <ul class="feature-list">
+                        <li><strong>Complete CRUD Operations:</strong> Add new courses, update details, or remove outdated offerings.</li>
+                        <li><strong>Modal Validation Forms:</strong> Add & Edit dialogs validate non-empty fields and positive numbers.</li>
+                        <li><strong>Capacity Constraint Rule:</strong> Cannot reduce course capacity below current enrolled student count.</li>
+                        <li><strong>Safe Course Deletion Guard:</strong> Blocks deletion if <code>registeredStudents &gt; 0</code>, preventing broken registration references.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Showcase - Faculty Management -->
+        <div class="slide" id="slide-12">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 8</div>
+                <h2 class="slide-title">Faculty Management System</h2>
+                <div class="slide-subtitle">Direct fulfillment of Problem Statement directive to manage faculty members.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/09_admin_faculty.png" alt="Admin Faculty Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-green">Instructor Directory</div>
+                    <div class="card-title">Faculty Portal</div>
+                    <ul class="feature-list">
+                        <li><strong>Fulfills Requirement:</strong> Satisfies explicit Problem Statement requirement: <em>"manage students, courses, faculty..."</em></li>
+                        <li><strong>Faculty Directory:</strong> Displays Faculty ID, Name, Department (CSE/IT), and Email address.</li>
+                        <li><strong>Live Search Bar:</strong> Real-time filtering across ID, Name, Department, or Email.</li>
+                        <li><strong>"+ Add Faculty" Modal:</strong> Registers new professors into <code>DataStore.faculties</code> with duplicate ID validation.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: Showcase - Registration Audit Trail -->
+        <div class="slide" id="slide-13">
+            <div class="slide-header">
+                <div class="slide-category">System Tour • Step 9</div>
+                <h2 class="slide-title">System-Wide Audit Log & Transactions</h2>
+                <div class="slide-subtitle">Chronological ledger tracking all student registrations and cancellations.</div>
+            </div>
+            <div class="showcase-layout">
+                <div class="screenshot-container">
+                    <img src="screenshots/10_admin_registrations.png" alt="Admin Registrations Screenshot">
+                </div>
+                <div class="card">
+                    <div class="badge badge-blue">Audit Trail</div>
+                    <div class="card-title">Transaction Tracking</div>
+                    <ul class="feature-list">
+                        <li><strong>Audit Trail Integrity:</strong> Tracks Registration ID, Student ID, Student Name, Course, and Date.</li>
+                        <li><strong>Status Badges:</strong> Green <code>REGISTERED</code> badge for active enrollments and red <code>CANCELLED</code> for history.</li>
+                        <li><strong>History Preservation:</strong> Cancellations are never hard-deleted; status transitions preserve complete historical records.</li>
+                        <li><strong>Powered by LinkedList:</strong> Demonstrates chronological traversal of <code>LinkedList&lt;Registration&gt;</code>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: Team Contributions -->
+        <div class="slide" id="slide-14">
+            <div class="slide-header">
+                <div class="slide-category">Group 11 Profiles</div>
+                <h2 class="slide-title">Team Members & Contributions</h2>
+                <div class="slide-subtitle">Individual technical contributions and module ownership.</div>
+            </div>
+            <div class="grid-4">
+                <div class="card">
+                    <div style="font-size: 1.8rem; margin-bottom: 6px;">👨‍💻</div>
+                    <div class="card-title" style="font-size: 1.15rem;">Jaikishan</div>
+                    <div class="badge badge-blue" style="font-size: 0.75rem;">Auth & Student Portal</div>
+                    <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; list-style: square; padding-left: 15px;">
+                        <li>Student.java & StudentService.java</li>
+                        <li>LoginFrame.java (<kbd>Enter</kbd> key support)</li>
+                        <li>StudentDashboard & CardLayout</li>
+                        <li>StudentHomePanel & Live Data Sync</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.8rem; margin-bottom: 6px;">👨‍💻</div>
+                    <div class="card-title" style="font-size: 1.15rem;">Omkar</div>
+                    <div class="badge badge-green" style="font-size: 0.75rem;">Course & Safe CRUD</div>
+                    <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; list-style: square; padding-left: 15px;">
+                        <li>Course.java & capacity rules</li>
+                        <li>CourseService.java & array resizing</li>
+                        <li>CoursePanel.java (Status badges)</li>
+                        <li>AdminCoursePanel & Safe Deletion Guard</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.8rem; margin-bottom: 6px;">👨‍💻</div>
+                    <div class="card-title" style="font-size: 1.15rem;">Sarthak</div>
+                    <div class="badge badge-blue" style="font-size: 0.75rem;">Registration & Credit Cap</div>
+                    <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; list-style: square; padding-left: 15px;">
+                        <li>Registration.java & RegistrationService.java</li>
+                        <li>18-Credit Maximum Cap enforcement</li>
+                        <li>RegistrationPanel.java info card</li>
+                        <li>MyCoursesPanel.java ButtonEditor</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div style="font-size: 1.8rem; margin-bottom: 6px;">👨‍💻</div>
+                    <div class="card-title" style="font-size: 1.15rem;">Danish</div>
+                    <div class="badge badge-green" style="font-size: 0.75rem;">Admin & Data Architecture</div>
+                    <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; list-style: square; padding-left: 15px;">
+                        <li>DataStore.java (4 Collections Architecture)</li>
+                        <li>Faculty.java & FacultyService.java</li>
+                        <li>AdminFacultyPanel.java (Directory & Modal)</li>
+                        <li>AdminDashboard & AdminHomePanel (5 stats)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: Conclusion & Future Scope -->
+        <div class="slide dark-theme" id="slide-15">
+            <div class="title-hero">
+                <div style="font-size: 1rem; font-weight: 800; letter-spacing: 2px; color: #60A5FA; margin-bottom: 12px;">
+                    PROJECT SUMMARY & CONCLUSION
+                </div>
+                <h1 style="font-size: 2.8rem; font-weight: 900; line-height: 1.15; margin-bottom: 20px;">
+                    An Enterprise-Grade Desktop Solution
+                </h1>
+                
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-title" style="color: #60A5FA;">🏆 Academic Achievements</div>
+                        <ul class="feature-list" style="color: #E2E8F0;">
+                            <li>Full compliance with all 8 syllabus objectives and 10 development steps.</li>
+                            <li>Demonstrates practical mastery of Java OOP, AWT/Swing thread safety, and Collections.</li>
+                            <li>Implemented enterprise safeguards: Safe Deletion Guard, 18-Credit Cap, and live cross-panel sync.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title" style="color: #60A5FA;">🔮 Future Scope</div>
+                        <ul class="feature-list" style="color: #E2E8F0;">
+                            <li>Integration with persistent SQL databases (MySQL/PostgreSQL) via JDBC.</li>
+                            <li>Automated Course Waitlisting when enrolled students cancel registrations.</li>
+                            <li>Automated Student PDF Schedule generation using iText.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 35px; text-align: center;">
+                    <h2 style="font-size: 2rem; color: #FFFFFF; font-weight: 800;">Thank You! Any Questions?</h2>
+                    <p style="font-size: 1rem; color: #94A3B8; margin-top: 6px;">Group 11 • Cohort: Jeff Bezos • Batch 2025-29</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Navigation Controls -->
+        <div id="deck-footer">
+            <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+            <div class="slide-counter" id="slide-counter">Slide 1 of 15</div>
+            <div style="display: flex; gap: 10px;">
+                <button class="nav-btn" style="background: #475569;" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+                <button class="nav-btn" onclick="nextSlide()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress-bar');
+        const counter = document.getElementById('slide-counter');
+        const footer = document.getElementById('deck-footer');
+
+        function showSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= slides.length) index = slides.length - 1;
+
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                if (i === index) s.classList.add('active');
+            });
+
+            currentSlide = index;
+            progressBar.style.width = ((index + 1) / slides.length * 100) + '%';
+            counter.innerText = `Slide ${index + 1} of ${slides.length}`;
+
+            // Adjust footer background for dark slides
+            if (slides[index].classList.contains('dark-theme')) {
+                footer.classList.add('dark-theme-footer');
+            } else {
+                footer.classList.remove('dark-theme-footer');
+            }
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullScreen();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
