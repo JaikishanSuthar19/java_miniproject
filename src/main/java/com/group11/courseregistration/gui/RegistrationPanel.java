@@ -78,7 +78,14 @@ public class RegistrationPanel extends JPanel {
         }
     }
 
-    private void loadCourseDropdown() {
+    public void refreshPanel() {
+        loadCourseDropdown();
+        if (courseComboBox.getItemCount() > 0) {
+            updateCourseInfo();
+        }
+    }
+
+    public void loadCourseDropdown() {
         courseComboBox.removeAllItems();
         List<Course> courses = courseService.getSortedCourses();
         for (Course c : courses) {
@@ -86,7 +93,7 @@ public class RegistrationPanel extends JPanel {
         }
     }
 
-    private void updateCourseInfo() {
+    public void updateCourseInfo() {
         infoCard.removeAll();
         String selected = (String) courseComboBox.getSelectedItem();
         if (selected == null) return;
@@ -157,6 +164,11 @@ public class RegistrationPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "You are already registered for this course.", "Registration Failed", JOptionPane.WARNING_MESSAGE);
         } else if (result == RegistrationService.RegistrationResult.FULL) {
             JOptionPane.showMessageDialog(this, "This course is full.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
+        } else if (result == RegistrationService.RegistrationResult.CREDIT_LIMIT_EXCEEDED) {
+            JOptionPane.showMessageDialog(this,
+                "Registration denied: Adding this course exceeds the semester maximum of " +
+                RegistrationService.MAX_CREDITS + " credits.",
+                "Credit Limit Exceeded", JOptionPane.WARNING_MESSAGE);
         }
     }
 }

@@ -150,6 +150,7 @@ public class LoginFrame extends JFrame {
         });
         
         card.add(loginButton);
+        getRootPane().setDefaultButton(loginButton);
         
         card.add(Box.createRigidArea(new Dimension(0, 30)));
         

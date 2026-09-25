@@ -10,8 +10,10 @@ import java.util.List;
 
 public class RegistrationService {
 
+    public static final int MAX_CREDITS = 18;
+
     public enum RegistrationResult {
-        SUCCESS, DUPLICATE, FULL, NOT_FOUND
+        SUCCESS, DUPLICATE, FULL, NOT_FOUND, CREDIT_LIMIT_EXCEEDED
     }
 
     public RegistrationResult registerStudent(String studentId, String courseId) {
@@ -24,6 +26,10 @@ public class RegistrationService {
 
         if (course.isFull()) {
             return RegistrationResult.FULL;
+        }
+
+        if (getStudentTotalCredits(studentId) + course.getCredits() > MAX_CREDITS) {
+            return RegistrationResult.CREDIT_LIMIT_EXCEEDED;
         }
 
         course.registerStudent();

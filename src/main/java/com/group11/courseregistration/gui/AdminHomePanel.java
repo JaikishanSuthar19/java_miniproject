@@ -2,6 +2,7 @@ package com.group11.courseregistration.gui;
 
 import com.group11.courseregistration.model.Course;
 import com.group11.courseregistration.service.CourseService;
+import com.group11.courseregistration.service.FacultyService;
 import com.group11.courseregistration.service.RegistrationService;
 import com.group11.courseregistration.service.StudentService;
 import com.group11.courseregistration.utils.UIUtils;
@@ -12,8 +13,15 @@ import java.awt.*;
 public class AdminHomePanel extends JPanel {
     private StudentService studentService = new StudentService();
     private CourseService courseService = new CourseService();
+    private FacultyService facultyService = new FacultyService();
     private RegistrationService regService = new RegistrationService();
     private AdminDashboard parent;
+
+    private JLabel studentsVal;
+    private JLabel coursesVal;
+    private JLabel facultyVal;
+    private JLabel regsVal;
+    private JLabel seatsVal;
 
     public AdminHomePanel(AdminDashboard parent) {
         this.parent = parent;
@@ -29,30 +37,28 @@ public class AdminHomePanel extends JPanel {
         welcomeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(welcomeLabel);
 
-        JLabel subtitle = UIUtils.createSubtitleLabel("Here's your system overview.");
+        JLabel subtitle = UIUtils.createSubtitleLabel("Here's your comprehensive system overview.");
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(Box.createRigidArea(new Dimension(0, 5)));
         content.add(subtitle);
         content.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Statistics Cards
-        JPanel statsPanel = new JPanel(new GridLayout(1, 4, 20, 0));
+        // Statistics Cards (5 cards in grid)
+        JPanel statsPanel = new JPanel(new GridLayout(1, 5, 15, 0));
         statsPanel.setBackground(UIUtils.COLOR_BACKGROUND);
         statsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
 
-        int totalStudents = studentService.getAllStudents().size();
-        int totalCourses = courseService.getAllCourses().size();
-        int totalRegs = regService.getAllRegistrations().size();
-        
-        int availableSeats = 0;
-        for (Course c : courseService.getAllCourses()) {
-            availableSeats += c.getAvailableSeats();
-        }
+        studentsVal = new JLabel("0");
+        coursesVal = new JLabel("0");
+        facultyVal = new JLabel("0");
+        regsVal = new JLabel("0");
+        seatsVal = new JLabel("0");
 
-        statsPanel.add(createStatCard("👥", "TOTAL STUDENTS", String.valueOf(totalStudents)));
-        statsPanel.add(createStatCard("📚", "TOTAL COURSES", String.valueOf(totalCourses)));
-        statsPanel.add(createStatCard("📋", "TOTAL REGISTRATIONS", String.valueOf(totalRegs)));
-        statsPanel.add(createStatCard("🪑", "AVAILABLE SEATS", String.valueOf(availableSeats)));
+        statsPanel.add(createStatCard("👥", "TOTAL STUDENTS", studentsVal));
+        statsPanel.add(createStatCard("📚", "TOTAL COURSES", coursesVal));
+        statsPanel.add(createStatCard("👨‍🏫", "TOTAL FACULTY", facultyVal));
+        statsPanel.add(createStatCard("📋", "REGISTRATIONS", regsVal));
+        statsPanel.add(createStatCard("🪑", "OPEN SEATS", seatsVal));
 
         statsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(statsPanel);
@@ -78,6 +84,10 @@ public class AdminHomePanel extends JPanel {
         JButton btnStudents = UIUtils.createPrimaryButton("View Students");
         btnStudents.addActionListener(e -> parent.switchTab("Students"));
         actionPanel.add(btnStudents);
+
+        JButton btnFaculty = UIUtils.createPrimaryButton("Faculty Members");
+        btnFaculty.addActionListener(e -> parent.switchTab("Faculty"));
+        actionPanel.add(btnFaculty);
         
         JButton btnRegs = UIUtils.createPrimaryButton("View Registrations");
         btnRegs.addActionListener(e -> parent.switchTab("Registrations"));
@@ -86,9 +96,29 @@ public class AdminHomePanel extends JPanel {
         content.add(actionPanel);
         
         add(content, BorderLayout.NORTH);
+
+        refreshData();
+    }
+
+    public void refreshData() {
+        int totalStudents = studentService.getAllStudents().size();
+        int totalCourses = courseService.getAllCourses().size();
+        int totalFaculty = facultyService.getAllFaculties().size();
+        int totalRegs = regService.getAllRegistrations().size();
+        
+        int availableSeats = 0;
+        for (Course c : courseService.getAllCourses()) {
+            availableSeats += c.getAvailableSeats();
+        }
+
+        studentsVal.setText(String.valueOf(totalStudents));
+        coursesVal.setText(String.valueOf(totalCourses));
+        facultyVal.setText(String.valueOf(totalFaculty));
+        regsVal.setText(String.valueOf(totalRegs));
+        seatsVal.setText(String.valueOf(availableSeats));
     }
     
-    private JPanel createStatCard(String icon, String title, String value) {
+    private JPanel createStatCard(String icon, String title, JLabel valueLabel) {
         JPanel card = UIUtils.createCard();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         
@@ -100,13 +130,12 @@ public class AdminHomePanel extends JPanel {
         card.add(Box.createRigidArea(new Dimension(0, 10)));
         
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 11));
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 10));
         titleLabel.setForeground(UIUtils.COLOR_SECONDARY_TEXT);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         card.add(titleLabel);
         
-        JLabel valueLabel = new JLabel(value);
-        valueLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
+        valueLabel.setFont(new Font("SansSerif", Font.BOLD, 30));
         valueLabel.setForeground(UIUtils.COLOR_PRIMARY_TEXT);
         valueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         card.add(valueLabel);

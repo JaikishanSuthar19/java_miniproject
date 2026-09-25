@@ -87,7 +87,7 @@ public class CoursePanel extends JPanel {
         loadData("");
     }
 
-    private void loadData(String query) {
+    public void loadData(String query) {
         tableModel.setRowCount(0);
         List<Course> courses;
         if (query == null || query.trim().isEmpty()) {

@@ -6,11 +6,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminDashboard extends JFrame {
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private JLabel headerTitle;
+
+    // Sub-panels
+    private AdminHomePanel homePanel;
+    private AdminCoursePanel coursePanel;
+    private AdminStudentPanel studentPanel;
+    private AdminFacultyPanel facultyPanel;
+    private AdminRegistrationPanel registrationPanel;
+
+    // Navigation button tracking for active highlight
+    private Map<String, JLabel> navButtons = new HashMap<>();
 
     public AdminDashboard() {
         setTitle("College Course Registration - Admin Portal");
@@ -30,19 +42,53 @@ public class AdminDashboard extends JFrame {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         
-        cardPanel.add(new AdminHomePanel(this), "Dashboard");
-        cardPanel.add(new AdminCoursePanel(), "Manage Courses");
-        cardPanel.add(new AdminStudentPanel(), "Students");
-        cardPanel.add(new AdminRegistrationPanel(), "Registrations");
+        homePanel = new AdminHomePanel(this);
+        coursePanel = new AdminCoursePanel();
+        studentPanel = new AdminStudentPanel();
+        facultyPanel = new AdminFacultyPanel();
+        registrationPanel = new AdminRegistrationPanel();
+
+        cardPanel.add(homePanel, "Dashboard");
+        cardPanel.add(coursePanel, "Manage Courses");
+        cardPanel.add(studentPanel, "Students");
+        cardPanel.add(facultyPanel, "Faculty");
+        cardPanel.add(registrationPanel, "Registrations");
         
         rightSide.add(cardPanel, BorderLayout.CENTER);
         
         add(rightSide, BorderLayout.CENTER);
+
+        // Highlight initial tab
+        updateNavSelection("Dashboard");
     }
     
     public void switchTab(String name) {
         cardLayout.show(cardPanel, name);
         headerTitle.setText(name);
+        updateNavSelection(name);
+
+        // Auto-refresh target tab
+        if ("Dashboard".equals(name)) {
+            homePanel.refreshData();
+        } else if ("Manage Courses".equals(name)) {
+            coursePanel.loadData();
+        } else if ("Students".equals(name)) {
+            studentPanel.loadData("");
+        } else if ("Faculty".equals(name)) {
+            facultyPanel.loadData("");
+        } else if ("Registrations".equals(name)) {
+            registrationPanel.loadData();
+        }
+    }
+
+    private void updateNavSelection(String activeTab) {
+        for (Map.Entry<String, JLabel> entry : navButtons.entrySet()) {
+            if (entry.getKey().equals(activeTab)) {
+                entry.getValue().setBackground(UIUtils.COLOR_PRIMARY_BLUE);
+            } else {
+                entry.getValue().setBackground(UIUtils.COLOR_DARK_NAVY);
+            }
+        }
     }
 
     private JPanel createSidebar() {
@@ -70,6 +116,7 @@ public class AdminDashboard extends JFrame {
         sidebar.add(createNavButton("🏠 Dashboard", "Dashboard"));
         sidebar.add(createNavButton("📚 Manage Courses", "Manage Courses"));
         sidebar.add(createNavButton("👥 Students", "Students"));
+        sidebar.add(createNavButton("👨‍🏫 Faculty", "Faculty"));
         sidebar.add(createNavButton("📋 Registrations", "Registrations"));
         
         sidebar.add(Box.createVerticalGlue());
@@ -120,8 +167,8 @@ public class AdminDashboard extends JFrame {
         label.setBackground(UIUtils.COLOR_DARK_NAVY);
         label.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        if (cardName.equals("Dashboard")) {
-            label.setBackground(UIUtils.COLOR_PRIMARY_BLUE);
+        if (!cardName.equals("Settings")) {
+            navButtons.put(cardName, label);
         }
         
         label.addMouseListener(new MouseAdapter() {
@@ -131,19 +178,19 @@ public class AdminDashboard extends JFrame {
                     switchTab(cardName);
                 } else {
                     JOptionPane.showMessageDialog(AdminDashboard.this, 
-                        "Theme: Light\nApp: College Course Registration Management System\nGroup: 11\nVersion: 1.0", 
-                        "Settings", JOptionPane.INFORMATION_MESSAGE);
+                        "Theme: Modern SaaS (FlatLaf)\nApp: College Course Registration Management System\nGroup: 11\nVersion: 1.0", 
+                        "System Information", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (label.getBackground() != UIUtils.COLOR_PRIMARY_BLUE) {
+                if (!label.getBackground().equals(UIUtils.COLOR_PRIMARY_BLUE)) {
                     label.setBackground(UIUtils.COLOR_DARKER_NAVY);
                 }
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                if (label.getBackground() != UIUtils.COLOR_PRIMARY_BLUE) {
+                if (!label.getBackground().equals(UIUtils.COLOR_PRIMARY_BLUE)) {
                     label.setBackground(UIUtils.COLOR_DARK_NAVY);
                 }
             }
@@ -184,7 +231,7 @@ public class AdminDashboard extends JFrame {
         name.setFont(new Font("SansSerif", Font.BOLD, 14));
         namePanel.add(name);
         
-        JLabel details = new JLabel("System Admin");
+        JLabel details = new JLabel("System Admin • Full Control");
         details.setFont(new Font("SansSerif", Font.PLAIN, 12));
         details.setForeground(UIUtils.COLOR_SECONDARY_TEXT);
         namePanel.add(details);

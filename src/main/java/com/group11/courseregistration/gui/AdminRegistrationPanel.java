@@ -85,7 +85,7 @@ public class AdminRegistrationPanel extends JPanel {
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         tableModel.setRowCount(0);
         List<Registration> regs = registrationService.getAllRegistrations();
 

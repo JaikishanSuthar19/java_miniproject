@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StudentDashboard extends JFrame {
     private Student student;
@@ -19,6 +21,9 @@ public class StudentDashboard extends JFrame {
     private CoursePanel coursePanel;
     private RegistrationPanel registrationPanel;
     private MyCoursesPanel myCoursesPanel;
+
+    // Track nav buttons for active state highlight
+    private Map<String, JLabel> navButtons = new HashMap<>();
 
     public StudentDashboard(Student student) {
         this.student = student;
@@ -53,6 +58,36 @@ public class StudentDashboard extends JFrame {
         rightSide.add(cardPanel, BorderLayout.CENTER);
         
         add(rightSide, BorderLayout.CENTER);
+
+        // Highlight initial tab
+        updateNavSelection("Dashboard");
+    }
+
+    public void switchTab(String cardName) {
+        cardLayout.show(cardPanel, cardName);
+        headerTitle.setText(cardName);
+        updateNavSelection(cardName);
+
+        // Auto-refresh target tab
+        if ("Dashboard".equals(cardName)) {
+            homePanel.refreshData();
+        } else if ("Available Courses".equals(cardName)) {
+            coursePanel.loadData("");
+        } else if ("Register Course".equals(cardName)) {
+            registrationPanel.refreshPanel();
+        } else if ("My Courses".equals(cardName)) {
+            myCoursesPanel.loadData();
+        }
+    }
+
+    private void updateNavSelection(String activeTab) {
+        for (Map.Entry<String, JLabel> entry : navButtons.entrySet()) {
+            if (entry.getKey().equals(activeTab)) {
+                entry.getValue().setBackground(UIUtils.COLOR_PRIMARY_BLUE);
+            } else {
+                entry.getValue().setBackground(UIUtils.COLOR_DARK_NAVY);
+            }
+        }
     }
 
     private JPanel createSidebar() {
@@ -133,35 +168,30 @@ public class StudentDashboard extends JFrame {
         label.setBackground(UIUtils.COLOR_DARK_NAVY);
         label.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Highlight Dashboard initially
-        if (cardName.equals("Dashboard")) {
-            label.setBackground(UIUtils.COLOR_PRIMARY_BLUE);
+        if (!cardName.equals("Settings")) {
+            navButtons.put(cardName, label);
         }
         
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (!cardName.equals("Settings")) {
-                    cardLayout.show(cardPanel, cardName);
-                    headerTitle.setText(cardName);
-                    
-                    // Note: In a real app we'd manage selection state better across all buttons,
-                    // but for simplicity we rely on the card layout switching successfully.
+                    switchTab(cardName);
                 } else {
                     JOptionPane.showMessageDialog(StudentDashboard.this, 
-                        "Theme: Light\nApp: College Course Registration Management System\nGroup: 11\nVersion: 1.0", 
-                        "Settings", JOptionPane.INFORMATION_MESSAGE);
+                        "Theme: Modern SaaS (FlatLaf)\nApp: College Course Registration Management System\nGroup: 11\nVersion: 1.0", 
+                        "System Information", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (label.getBackground() != UIUtils.COLOR_PRIMARY_BLUE) {
+                if (!label.getBackground().equals(UIUtils.COLOR_PRIMARY_BLUE)) {
                     label.setBackground(UIUtils.COLOR_DARKER_NAVY);
                 }
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                if (label.getBackground() != UIUtils.COLOR_PRIMARY_BLUE) {
+                if (!label.getBackground().equals(UIUtils.COLOR_PRIMARY_BLUE)) {
                     label.setBackground(UIUtils.COLOR_DARK_NAVY);
                 }
             }

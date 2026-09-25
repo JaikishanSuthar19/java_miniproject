@@ -1,6 +1,5 @@
 package com.group11.courseregistration.gui;
 
-import com.group11.courseregistration.data.DataStore;
 import com.group11.courseregistration.model.Course;
 import com.group11.courseregistration.model.Student;
 import com.group11.courseregistration.service.CourseService;
@@ -9,12 +8,17 @@ import com.group11.courseregistration.utils.UIUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class StudentHomePanel extends JPanel {
     private Student student;
     private RegistrationService registrationService = new RegistrationService();
     private CourseService courseService = new CourseService();
+
+    private JLabel totalCoursesVal;
+    private JLabel availCoursesVal;
+    private JLabel myCoursesVal;
+    private JLabel creditsVal;
+    private JPanel recentWrapper;
 
     public StudentHomePanel(Student student) {
         this.student = student;
@@ -31,7 +35,7 @@ public class StudentHomePanel extends JPanel {
         welcomeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(welcomeLabel);
 
-        JLabel subtitle = UIUtils.createSubtitleLabel("Here's your academic overview.");
+        JLabel subtitle = UIUtils.createSubtitleLabel("Here's your real-time academic overview.");
         subtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(Box.createRigidArea(new Dimension(0, 5)));
         content.add(subtitle);
@@ -42,15 +46,15 @@ public class StudentHomePanel extends JPanel {
         statsPanel.setBackground(UIUtils.COLOR_BACKGROUND);
         statsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
 
-        int totalCourses = courseService.getAllCourses().size();
-        int availableCourses = getAvailableCoursesCount();
-        int myCourses = registrationService.getStudentRegistrations(student.getStudentId()).size();
-        int totalCredits = registrationService.getStudentTotalCredits(student.getStudentId());
+        totalCoursesVal = new JLabel("0");
+        availCoursesVal = new JLabel("0");
+        myCoursesVal = new JLabel("0");
+        creditsVal = new JLabel("0");
 
-        statsPanel.add(createStatCard("📚", "TOTAL COURSES", String.valueOf(totalCourses), "Courses available"));
-        statsPanel.add(createStatCard("✓", "AVAILABLE COURSES", String.valueOf(availableCourses), "Open for registration"));
-        statsPanel.add(createStatCard("📖", "MY COURSES", String.valueOf(myCourses), "Currently registered"));
-        statsPanel.add(createStatCard("🎓", "TOTAL CREDITS", String.valueOf(totalCredits), "Registered credits"));
+        statsPanel.add(createStatCard("📚", "TOTAL COURSES", totalCoursesVal, "Courses available"));
+        statsPanel.add(createStatCard("✓", "AVAILABLE COURSES", availCoursesVal, "Open for registration"));
+        statsPanel.add(createStatCard("📖", "MY COURSES", myCoursesVal, "Currently registered"));
+        statsPanel.add(createStatCard("🎓", "TOTAL CREDITS", creditsVal, "Registered credits"));
 
         statsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(statsPanel);
@@ -69,11 +73,31 @@ public class StudentHomePanel extends JPanel {
         content.add(recentSubtitle);
         content.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        JPanel recentPanel = createRecentCoursesPanel();
-        recentPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        content.add(recentPanel);
+        recentWrapper = new JPanel(new BorderLayout());
+        recentWrapper.setBackground(UIUtils.COLOR_BACKGROUND);
+        recentWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
+        content.add(recentWrapper);
 
         add(content, BorderLayout.NORTH);
+
+        refreshData();
+    }
+
+    public void refreshData() {
+        int totalCourses = courseService.getAllCourses().size();
+        int availableCourses = getAvailableCoursesCount();
+        int myCourses = registrationService.getStudentRegistrations(student.getStudentId()).size();
+        int totalCredits = registrationService.getStudentTotalCredits(student.getStudentId());
+
+        totalCoursesVal.setText(String.valueOf(totalCourses));
+        availCoursesVal.setText(String.valueOf(availableCourses));
+        myCoursesVal.setText(String.valueOf(myCourses));
+        creditsVal.setText(String.valueOf(totalCredits));
+
+        recentWrapper.removeAll();
+        recentWrapper.add(createRecentCoursesPanel(), BorderLayout.CENTER);
+        recentWrapper.revalidate();
+        recentWrapper.repaint();
     }
     
     private int getAvailableCoursesCount() {
@@ -84,7 +108,7 @@ public class StudentHomePanel extends JPanel {
         return count;
     }
 
-    private JPanel createStatCard(String icon, String title, String value, String subtitle) {
+    private JPanel createStatCard(String icon, String title, JLabel valueLabel, String subtitle) {
         JPanel card = UIUtils.createCard();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         
@@ -101,7 +125,6 @@ public class StudentHomePanel extends JPanel {
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         card.add(titleLabel);
         
-        JLabel valueLabel = new JLabel(value);
         valueLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
         valueLabel.setForeground(UIUtils.COLOR_PRIMARY_TEXT);
         valueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);

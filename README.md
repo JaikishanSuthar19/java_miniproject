@@ -53,6 +53,85 @@ As requested, the application heavily utilizes the Java Collections framework:
   - **Students**: Searchable directory of students.
   - **Registrations**: System-wide log of all course registrations and cancellations.
 
+## TEAM MEMBERS & CONTRIBUTIONS (GROUP 11)
+
+### 👨‍💻 Jaikishan
+* **Java Coding**:
+  - Developed `Student.java` (Model)
+  - Developed `StudentService.java` (Business Logic)
+  - Implemented student authentication and session credentials
+  - Implemented student search and profile management
+* **Swing Development**:
+  - Developed `LoginFrame.java` (Split-screen authentication with Enter-key submission)
+  - Developed `StudentDashboard.java` (Container with dynamic sidebar & active tab highlight)
+  - Developed `StudentHomePanel.java` (Metric summary cards & recent registration history)
+  - Implemented CardLayout navigation with automatic tab data synchronization
+  - Integrated FlatLaf look-and-feel across student views
+* **Main Contribution**: **Authentication System + Student Dashboard Architecture + Application Navigation & Live State Sync**
+
+---
+
+### 👨‍💻 Omkar
+* **Java Coding**:
+  - Developed `Course.java` (Model with seat capacity tracking)
+  - Developed `CourseService.java` (CRUD business logic, array resizing, and map synchronization)
+  - Implemented course capacity and availability checks
+  - Implemented case-insensitive multi-attribute course search
+* **Swing Development**:
+  - Developed `CoursePanel.java` (Student course catalog with live search)
+  - Developed `AdminCoursePanel.java` (Admin course management with modal dialogs)
+  - Implemented custom JTable styling and status badge rendering (AVAILABLE / FULL)
+  - Implemented modal Add Course and Edit Course dialogs with validation
+  - Implemented **Safe Course Deletion Guard** (blocking deletion of courses with enrolled students)
+* **Main Contribution**: **Course Management & Service + Course GUI + Safe CRUD Operations & Capacity Tracking**
+
+---
+
+### 👨‍💻 Sarthak
+* **Java Coding**:
+  - Developed `Registration.java` (Transaction Model)
+  - Developed `RegistrationService.java` (Enrollment, cancellation, and validation rules)
+  - Implemented duplicate registration prevention
+  - Implemented real-time seat decrement and release logic
+  - Implemented **Semester Maximum Credit Cap** (18 credits rule)
+  - Implemented credit calculation per student
+* **Swing Development**:
+  - Developed `RegistrationPanel.java` (Course selection dropdown & dynamic info card)
+  - Developed `MyCoursesPanel.java` (Enrolled courses table with interactive action buttons)
+  - Built custom `TableCellRenderer` and `TableCellEditor` for the interactive "Cancel" button
+  - Implemented credit cap warning dialogs and registration confirmation alerts
+* **Main Contribution**: **Registration Service & Workflow + Credit Cap Validation + Cancellation & MyCourses UI**
+
+---
+
+### 👨‍💻 Danish
+* **Java Coding**:
+  - Developed `Faculty.java` (Model)
+  - Developed `FacultyService.java` (Faculty directory and search operations)
+  - Architected `DataStore.java` implementing the 4 required Java Collections (Array, LinkedList, HashMap, TreeMap)
+  - Implemented student and faculty search algorithms
+  - Handled data retrieval and collection synchronization
+* **Swing Development**:
+  - Developed `AdminDashboard.java` (Admin portal with active highlight & view synchronization)
+  - Developed `AdminHomePanel.java` (System overview with 5 live metric cards & quick actions)
+  - Developed `AdminStudentPanel.java` (Directory of students with live search)
+  - Developed `AdminFacultyPanel.java` (Faculty directory with search & Add Faculty modal)
+  - Developed `AdminRegistrationPanel.java` (College-wide registration audit log)
+* **Main Contribution**: **Admin Dashboard & System Overview + Faculty Management System + DataStore Collections Architecture**
+
+---
+
+### 🤝 Shared Team Development
+All four members actively collaborated on:
+* Object-Oriented Architecture (MVC separation of Model, Data, Service, and GUI layers)
+* Java Collections Framework integration & time complexity optimization ($O(1)$ HashMaps, $O(\log N)$ TreeMaps, Doubly-Linked Lists)
+* Java Swing & AWT Event Dispatch Thread (EDT) safety
+* Central Design System (`UIUtils.java`) with FlatLaf modern SaaS aesthetics
+* Real-time cross-panel data synchronization and active tab state indicators
+* Testing, debugging, edge-case validation, and comprehensive documentation (`CODE_EXPLANATION.md`)
+
+---
+
 ## LOGIN CREDENTIALS
 **Student**: `student` / `student123`
 **Admin**: `admin` / `admin123`

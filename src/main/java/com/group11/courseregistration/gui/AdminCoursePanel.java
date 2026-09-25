@@ -92,13 +92,24 @@ public class AdminCoursePanel extends JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 String courseId = (String) table.getValueAt(row, 0);
+                Course course = courseService.getCourse(courseId);
+                if (course != null && course.getRegisteredStudents() > 0) {
+                    JOptionPane.showMessageDialog(this,
+                        "Cannot delete course '" + course.getCourseName() + "'!\n" +
+                        course.getRegisteredStudents() + " student(s) are actively enrolled.\n" +
+                        "Registrations must be cancelled before deleting.",
+                        "Course Deletion Denied", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 int confirm = JOptionPane.showConfirmDialog(this,
-                    "Delete this course?\nAll course information will be removed.",
+                    "Delete course '" + (course != null ? course.getCourseName() : courseId) + "'?\nAll course information will be permanently removed.",
                     "Confirm Deletion",
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (confirm == JOptionPane.OK_OPTION) {
                     courseService.deleteCourse(courseId);
                     loadData();
+                    JOptionPane.showMessageDialog(this, "Course deleted successfully.");
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Please select a course to delete.");
@@ -114,7 +125,7 @@ public class AdminCoursePanel extends JPanel {
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         tableModel.setRowCount(0);
         List<Course> courses = courseService.getSortedCourses();
 

@@ -80,7 +80,7 @@ public class AdminStudentPanel extends JPanel {
         loadData("");
     }
 
-    private void loadData(String query) {
+    public void loadData(String query) {
         tableModel.setRowCount(0);
         List<Student> students;
         if (query == null || query.trim().isEmpty()) {
