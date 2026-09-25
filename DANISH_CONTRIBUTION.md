@@ -1,11 +1,11 @@
-# 🛠️ Individual Project Report & Presentation Guide
+# Individual Project Report & Presentation Guide
 ## Member: Danish
 **Group 11 — College Course Registration Management System**  
 **Role**: Lead Architect — DataStore Architecture, Admin Dashboard & Faculty Management
 
 ---
 
-## 📌 Executive Summary of Contribution
+## Executive Summary of Contribution
 
 As part of Group 11, Danish was responsible for the foundational data architecture of the application: the **In-Memory DataStore Architecture implementing Java Collections**, the **Complete Faculty Management System**, and the **Administrative Dashboard & System-Wide Monitoring Portals**.
 
@@ -25,7 +25,7 @@ Key responsibilities included:
 
 ---
 
-## 📂 Assigned Files & Technical Ownership
+## Assigned Files & Technical Ownership
 
 | File | Layer | Key Responsibilities |
 |---|---|---|
@@ -40,7 +40,7 @@ Key responsibilities included:
 
 ---
 
-## 💻 Detailed Technical Implementation
+## Detailed Technical Implementation
 
 ### 1. In-Memory DataStore Architecture (`DataStore.java`)
 * Fulfills all 4 Collection requirements in the assignment problem statement:
@@ -150,7 +150,7 @@ public void refreshData() {
 
 ---
 
-## 🎤 Presentation & Viva Speaking Script
+## Presentation & Viva Speaking Script
 
 Use this script during your turn to present:
 

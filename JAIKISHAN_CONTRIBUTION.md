@@ -1,11 +1,11 @@
-# 🎓 Individual Project Report & Presentation Guide
+# Individual Project Report & Presentation Guide
 ## Member: Jaikishan
 **Group 11 — College Course Registration Management System**  
 **Role**: Lead Developer — Authentication, Student Domain & UI Navigation Architecture
 
 ---
 
-## 📌 Executive Summary of Contribution
+## Executive Summary of Contribution
 
 As part of Group 11, Jaikishan was responsible for the **User Authentication System**, the **Student Domain Model and Business Logic**, and the **Student Dashboard Shell & Navigation Architecture**. 
 
@@ -18,7 +18,7 @@ Key responsibilities included:
 
 ---
 
-## 📂 Assigned Files & Technical Ownership
+## Assigned Files & Technical Ownership
 
 | File | Layer | Key Responsibilities |
 |---|---|---|
@@ -30,7 +30,7 @@ Key responsibilities included:
 
 ---
 
-## 💻 Detailed Technical Implementation
+## Detailed Technical Implementation
 
 ### 1. Authentication Logic (`StudentService.java` & `LoginFrame.java`)
 * The login workflow is decoupled into GUI validation and Service authentication:
@@ -92,7 +92,7 @@ private void updateNavSelection(String activeTab) {
 
 ---
 
-## 🎤 Presentation & Viva Speaking Script
+## Presentation & Viva Speaking Script
 
 Use this script during your turn to present:
 

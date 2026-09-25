@@ -1,11 +1,11 @@
-# 📚 Individual Project Report & Presentation Guide
+# Individual Project Report & Presentation Guide
 ## Member: Omkar
 **Group 11 — College Course Registration Management System**  
 **Role**: Lead Developer — Course Domain Model, Course Service & Course UI Management
 
 ---
 
-## 📌 Executive Summary of Contribution
+## Executive Summary of Contribution
 
 As part of Group 11, Omkar was responsible for the **Course Domain Model**, the **Course Service Layer & Data Structure Synchronization**, the **Student Course Catalog Interface**, and the **Administrative Course CRUD Operations**.
 
@@ -18,7 +18,7 @@ Key responsibilities included:
 
 ---
 
-## 📂 Assigned Files & Technical Ownership
+## Assigned Files & Technical Ownership
 
 | File | Layer | Key Responsibilities |
 |---|---|---|
@@ -29,7 +29,7 @@ Key responsibilities included:
 
 ---
 
-## 💻 Detailed Technical Implementation
+## Detailed Technical Implementation
 
 ### 1. Course Capacity Rules (`Course.java`)
 * Encapsulates seat calculations to ensure data integrity:
@@ -132,7 +132,7 @@ class StatusCellRenderer extends JLabel implements TableCellRenderer {
 
 ---
 
-## 🎤 Presentation & Viva Speaking Script
+## Presentation & Viva Speaking Script
 
 Use this script during your turn to present:
 

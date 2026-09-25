@@ -55,7 +55,7 @@ As requested, the application heavily utilizes the Java Collections framework:
 
 ## TEAM MEMBERS & CONTRIBUTIONS (GROUP 11)
 
-### 👨‍💻 Jaikishan
+### Jaikishan
 * **Java Coding**:
   - Developed `Student.java` (Model)
   - Developed `StudentService.java` (Business Logic)
@@ -71,7 +71,7 @@ As requested, the application heavily utilizes the Java Collections framework:
 
 ---
 
-### 👨‍💻 Omkar
+### Omkar
 * **Java Coding**:
   - Developed `Course.java` (Model with seat capacity tracking)
   - Developed `CourseService.java` (CRUD business logic, array resizing, and map synchronization)
@@ -87,7 +87,7 @@ As requested, the application heavily utilizes the Java Collections framework:
 
 ---
 
-### 👨‍💻 Sarthak
+### Sarthak
 * **Java Coding**:
   - Developed `Registration.java` (Transaction Model)
   - Developed `RegistrationService.java` (Enrollment, cancellation, and validation rules)
@@ -104,7 +104,7 @@ As requested, the application heavily utilizes the Java Collections framework:
 
 ---
 
-### 👨‍💻 Danish
+### Danish
 * **Java Coding**:
   - Developed `Faculty.java` (Model)
   - Developed `FacultyService.java` (Faculty directory and search operations)
@@ -121,7 +121,7 @@ As requested, the application heavily utilizes the Java Collections framework:
 
 ---
 
-### 🤝 Shared Team Development
+### Shared Team Development
 All four members actively collaborated on:
 * Object-Oriented Architecture (MVC separation of Model, Data, Service, and GUI layers)
 * Java Collections Framework integration & time complexity optimization ($O(1)$ HashMaps, $O(\log N)$ TreeMaps, Doubly-Linked Lists)

@@ -1,11 +1,11 @@
-# 📋 Individual Project Report & Presentation Guide
+# Individual Project Report & Presentation Guide
 ## Member: Sarthak
 **Group 11 — College Course Registration Management System**  
 **Role**: Lead Developer — Registration Domain, Business Rules Engine & Student Enrollment UI
 
 ---
 
-## 📌 Executive Summary of Contribution
+## Executive Summary of Contribution
 
 As part of Group 11, Sarthak was responsible for the core transactional engine of the application: the **Registration Domain Model**, the **Registration Service Layer & Validation Rules**, the **Course Enrollment Interface**, and the **My Courses Management Panel**.
 
@@ -19,7 +19,7 @@ Key responsibilities included:
 
 ---
 
-## 📂 Assigned Files & Technical Ownership
+## Assigned Files & Technical Ownership
 
 | File | Layer | Key Responsibilities |
 |---|---|---|
@@ -30,7 +30,7 @@ Key responsibilities included:
 
 ---
 
-## 💻 Detailed Technical Implementation
+## Detailed Technical Implementation
 
 ### 1. Robust Registration Validation Engine (`RegistrationService.java`)
 * Executes a 4-tier validation pipeline before approving any registration:
@@ -130,7 +130,7 @@ class ButtonEditor extends DefaultCellEditor {
 
 ---
 
-## 🎤 Presentation & Viva Speaking Script
+## Presentation & Viva Speaking Script
 
 Use this script during your turn to present:
 
